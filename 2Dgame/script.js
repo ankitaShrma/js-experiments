@@ -13,10 +13,38 @@ function getRandom(){
 	return random;
 }
 
+
+var speed = 0;
+var speed_dy = 1;
+//clicked = true;
+var bulletTotal = 2
+var bullets = [];
+var enemies = [];
+//var ctx = $background.getContext("2d");
+var height = 600;
+var width = 400;
+
 var en = new Enemy()
 //en.drawEnemy()
 
 clicked = false;
+
+/*OBJECTS*/
+var plane = new Plane();
+
+var newPlane = new Plane();
+newPlane.updateplanePostion();
+plane.resetplanePosition();
+
+
+
+//var enemy = new Enemy()
+enemies.push(en)
+
+
+ en.drawEnemy()
+ en.moveEnemy()
+
 
 $button.onclick = function(){
 	console.log(clicked);
@@ -38,21 +66,13 @@ $button.onclick = function(){
 		//movebullet()
 		//en.drawEnemy();
 		//en.moveEnemy();
-		checkCollisionwithEnemy();
+		
 		
 		
 	},60)
 }
 
-var speed = 0;
-var speed_dy = 1;
-//clicked = true;
-var bulletTotal = 2
-var bullets = [];
-var enemies = [];
-//var ctx = $background.getContext("2d");
-var height = 600;
-var width = 400;
+
 
 function Plane(){
 	this.$plane = document.getElementById('plane');
@@ -85,8 +105,88 @@ function Plane(){
 			self.$plane.style.left = self.planeX + 'px';
 	}
 }
-var plane = new Plane();
 
+
+
+
+
+
+function Enemy(){
+	//this.x = -100;
+	this.y = -100;
+	this.speedX= 20 
+	 this.speedY= 2 
+	 this.width= 100 
+	 this.height= 100;
+    this.$elem = document.createElement("div");
+    this.$parent = document.getElementsByClassName('container')[0];
+
+	 //this.container 
+	 var self = this;
+
+
+	this.drawEnemy = function() {
+		
+		var e = getRandom()
+		if(e=='left'){
+			self.$elem.style.left = '35px';
+		}
+		if(e=='middle'){
+			self.$elem.style.left = '150px';
+		}
+		if(e=='right'){
+			self.$elem.style.left = '265px';
+		}
+ 
+  //console.log(' drawbullet called');
+	  	self.$elem.className = "enemy";
+	    self.$elem.style.height = self.height + "px";
+	    self.$elem.style.width = self.width + "px";
+	    self.$elem.style.backgroundColor = 'red';
+	    self.$elem.style.top = self.y + 'px';
+	    // self.$elem.style.left = self.x +'px';
+	    console.log(self.$parent, "parent");
+	   	self.$parent.appendChild(self.$elem);
+	   
+	   
+	   }
+
+
+	this.moveEnemy = function() {
+		
+		setInterval(function(){
+
+	 
+	   self.y += self.speedY ;
+	   //console.log(self.y, 'hfgkjsdhfkjhdfkjhsrfjk')
+	   self.$elem.style.top = self.y + "px";
+	   
+	   	if(self.y == 520){
+	   		console.log(self.$parent.childNodes, 'out')
+	   		self.$elem.remove()
+	   	}
+	   	if(self.y == 100){
+	   		console.log('yedhj')
+	   		var newEnemy = new Enemy()
+	   		enemies.push(newEnemy)
+	   		newEnemy.drawEnemy()
+	   		newEnemy.moveEnemy()
+
+	   	}
+	   //	console.log('movebullet called', enemies)
+	 //}
+	}, 80)}
+
+	this.collide = function(bull){
+		for(var i = 1 ; i<bullets.length; i++)
+			{console.log('hey')}
+	}
+
+	console.log('movebullet called', enemies)
+
+	
+
+}
 
 function Bullet(){
 	this.x = plane.planeX + 50;
@@ -134,81 +234,9 @@ function Bullet(){
 
 	 //}
 	}, 20)
+	
 //console.log('movebullet called')
 }
-}
-
-
-function Enemy(){
-	//this.x = -100;
-	this.y = -100;
-	this.speedX= 20 
-	 this.speedY= 20 
-	 this.width= 100 
-	 this.height= 100;
-    this.$elem = document.createElement("div");
-    this.$parent = document.getElementsByClassName('container')[0];
-
-	 //this.container 
-	 var self = this;
-
-
-	this.drawEnemy = function() {
-		
-		var e = getRandom()
-		if(e=='left'){
-			self.$elem.style.left = '35px';
-		}
-		if(e=='middle'){
-			self.$elem.style.left = '150px';
-		}
-		if(e=='right'){
-			self.$elem.style.left = '265px';
-		}
- 
-  //console.log(' drawbullet called');
-	  	self.$elem.className = "enemy";
-	    self.$elem.style.height = self.height + "px";
-	    self.$elem.style.width = self.width + "px";
-	    self.$elem.style.backgroundColor = 'red';
-	    self.$elem.style.top = self.y + 'px';
-	    // self.$elem.style.left = self.x +'px';
-	    console.log(self.$parent, "parent");
-	   	self.$parent.appendChild(self.$elem);
-	   
-	   
-	   }
-
-
-	this.moveEnemy = function() {
-		
-		setInterval(function(){
-
-	 
-	   self.y += self.speedY ;
-	   //console.log(self.y, 'hfgkjsdhfkjhdfkjhsrfjk')
-	   self.$elem.style.top = self.y + "px";
-	   
-	   	if(self.y == 500){
-	   		console.log(self.$parent.childNodes, 'out')
-	   		self.$elem.remove()
-	   	}
-	   	if(self.y == 100){
-	   		console.log('yedhj')
-	   		var newEnemy = new Enemy()
-	   		enemies.push(newEnemy)
-	   		newEnemy.drawEnemy()
-	   		newEnemy.moveEnemy()
-
-	   	}
-	   	console.log('movebullet called', enemies)
-	 //}
-	}, 800)}
-
-	console.log('movebullet called', enemies)
-
-	
-
 }
 
 
@@ -282,24 +310,11 @@ function keyupEventHandler(e)
 
 
 var checkCollisionwithEnemy = function(bullet, enemy){
-	console.log(bullets.length, 'jsdhfjhdfkjhfdkjghdfk')
-	console.log(enemies.length, 'jsddhfkjsdh')
+	//console.log(bullets.length, 'jsdhfjhdfkjhfdkjghdfk')
+	//console.log(enemies.length, 'jsddhfkjsdh')
 
 }
 
-/*OBJECTS*/
-var newPlane = new Plane();
-newPlane.updateplanePostion();
-plane.resetplanePosition();
-
-
-
-var enemy = new Enemy()
-enemies.push(enemy)
-
-
- enemy.drawEnemy()
- enemy.moveEnemy()
 
 
 
