@@ -1,0 +1,47 @@
+
+*{
+	margin: 0px;
+
+	}
+
+.container{
+	background-color: brown;
+	height: 500px;
+	width: 350px;
+
+}
+.canvas{
+	background: url('./images/bg.png');
+	height: 500px;
+	width: 350px;
+	overflow: hidden;
+}
+.enemy{
+	position: absolute;
+	background:url('./images/pipeNorth.png');
+	
+}
+
+.enemyBottom{
+	position: absolute;
+	background:url('./images/pipeSouth.png');
+}
+.bird{
+	position: absolute;
+	background:url('./images/bird.png');
+	
+	/*border: 1px solid black;*/
+
+}
+
+.game-wrapper{
+	position: absolute;
+	display: none;
+	z-index: 10;
+	margin-top: 200px;
+	margin-left: 40px;
+}
+.score{
+	position: absolute;
+	z-index: 20;
+}
