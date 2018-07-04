@@ -1,0 +1,35 @@
+
+
+
+        /********** Moving Ball **********/
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        /*.main{
+            height: 550px;
+            width: 550px;
+            background-color: black;
+
+        }*/
+
+        /*#container{
+            height: 500px;
+            width: 500px;
+            background-color: pink;
+            position: relative;
+
+        }*/
+        .box{
+            height: 30px;
+            width: 30px;
+            background-color: red;
+            position: absolute;
+            /*border-radius: 50%;*/
+        }
+        /*.box2{
+            height: 20px;
+            width: 20px;
+            background-color: blue;
+            position: absolute;
+        }*/
