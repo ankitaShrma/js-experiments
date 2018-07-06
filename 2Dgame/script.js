@@ -5,7 +5,7 @@ var $homescreen = document.getElementById('game-wrapper');
 var $background = document.getElementById('background');
 var $button = document.getElementById('play-button');
 
-var rand = ['left', 'middle', 'right']
+var rand = ['40px', '150px', '260px']
 
 function getRandom(){
 
@@ -24,7 +24,9 @@ var enemies = [];
 var height = 600;
 var width = 400;
 
-var en = new Enemy()
+var en = new Enemy({
+	x: getRandom()
+})
 //en.drawEnemy()
 
 clicked = false;
@@ -39,21 +41,22 @@ plane.resetplanePosition();
 
 
 //var enemy = new Enemy()
-enemies.push(en)
+//enemies.push(en)
 
 
- en.drawEnemy()
- en.moveEnemy()
-
+ //en.drawEnemy()
+ //en.moveEnemy()
+ 
+var a = 0;
 
 $button.onclick = function(){
-	console.log(clicked);
+	//console.log(clicked);
 	clicked = true;
-	console.log(clicked);
-	var pos = 0;
-	$homescreen.style.display = 'none';
-	$background.style.backgroundImage = 'url("http://hanslodge.com/images/8cE6oaLxi.jpg")';
-	this.style.display = 'none';
+	//console.log(clicked);
+ 	var pos = 0;
+ 	$homescreen.style.display = 'none';
+ 	$background.style.backgroundImage = 'url("http://hanslodge.com/images/8cE6oaLxi.jpg")';
+ 	this.style.display = 'none';
 
 	setInterval (function(){
 		if (pos == 600) {
@@ -63,13 +66,55 @@ $button.onclick = function(){
 			pos++;
 			$background.style.backgroundPosition = "0px" + " " + pos +"px";	
 		}
+
+		
+		//console.log(a)
+		if(a%20 == 0){
+		//console.log('dhfsdfkhsfkshfs')
+		var en = new Enemy({
+		x: getRandom()
+		})
+		enemies.push(en);
+		//console.log(enemies)
+
+		}
+		a++
 		//movebullet()
-		//en.drawEnemy();
-		//en.moveEnemy();
+		// en.drawEnemy();
+		// en.moveEnemy();
+		for(var i = enemies.length-1; i>=0; i--){
+		enemies[i].drawEnemy();
+		enemies[i].moveEnemy();
+		// if(enemies[i].hits(plane) || enemies[i].collide(bullets)){
+		// console.log('Game Over!!!')
+		// }
+		if(enemies[i].outside()){
+			enemies.splice(i,1)
+		}
+
+	}
+
+	for(var i = 0; i<enemies.length; i++){
+
+		console.log('after', plane.planeX+'planeX')
+	   		//for (var j = 0; j < bullets.length; j++) {
+	   			if(enemies[i].hits(plane)){
+	   				//console.log('after', enemies[i])
+
+	   				// enemies[i].health-=1
+	   				
+	   				// bullets[j].$elem.remove();
+	   				
+	   				// bullets.splice(j,1)
+	   				alert('game over')
+	   			}
+	   			
+	   			
+	   		}
 		
 		
 		
-	},60)
+	},100)
 }
 
 
@@ -111,32 +156,34 @@ function Plane(){
 
 
 
-function Enemy(){
-	//this.x = -100;
-	this.y = -100;
-	this.speedX= 20 
-	 this.speedY= 2 
-	 this.width= 100 
-	 this.height= 100;
+function Enemy(props){
+	this.x = props.x;
+	this.health = 2
+	this.y = -120;
+	this.speedX= 40 
+	this.speedY= 10 
+	this.width= 100 
+	this.height= 100;
     this.$elem = document.createElement("div");
     this.$parent = document.getElementsByClassName('container')[0];
 
 	 //this.container 
 	 var self = this;
+	
 
 
 	this.drawEnemy = function() {
 		
-		var e = getRandom()
-		if(e=='left'){
-			self.$elem.style.left = '35px';
-		}
-		if(e=='middle'){
-			self.$elem.style.left = '150px';
-		}
-		if(e=='right'){
-			self.$elem.style.left = '265px';
-		}
+		// var e = getRandom()
+		// if(e=='left'){
+		// 	self.$elem.style.left = '35px';
+		// }
+		// else if(e=='middle'){
+		// 	self.$elem.style.left = '150px';
+		// }
+		// else if(e=='right'){
+		// 	self.$elem.style.left = '265px';
+		// }
  
   //console.log(' drawbullet called');
 	  	self.$elem.className = "enemy";
@@ -144,17 +191,26 @@ function Enemy(){
 	    self.$elem.style.width = self.width + "px";
 	    self.$elem.style.backgroundColor = 'red';
 	    self.$elem.style.top = self.y + 'px';
-	    // self.$elem.style.left = self.x +'px';
-	    console.log(self.$parent, "parent");
+	    self.$elem.style.left = self.x;
+	    //console.log(self.$parent, "parent");
 	   	self.$parent.appendChild(self.$elem);
 	   
 	   
 	   }
+	this.outside = function(){
+		if(this.y>500){
+			self.$elem.remove()
+			return true
+		}
+		else return false
+
+
+	}
 
 
 	this.moveEnemy = function() {
 		
-		setInterval(function(){
+		//setInterval(function(){
 
 	 
 	   self.y += self.speedY ;
@@ -166,23 +222,34 @@ function Enemy(){
 	   		self.$elem.remove()
 	   	}
 	   	if(self.y == 100){
-	   		console.log('yedhj')
-	   		var newEnemy = new Enemy()
-	   		enemies.push(newEnemy)
-	   		newEnemy.drawEnemy()
-	   		newEnemy.moveEnemy()
+	   		//console.log('yedhj')
+	   		// var newEnemy = new Enemy()
+	   		// enemies.push(newEnemy)
+	   		// newEnemy.drawEnemy()
+	   		//newEnemy.moveEnemy()
 
 	   	}
 	   //	console.log('movebullet called', enemies)
-	 //}
-	}, 80)}
+	 }
+	//}, 80)}
 
-	this.collide = function(bull){
-		for(var i = 1 ; i<bullets.length; i++)
-			{console.log('hey')}
+	
+		
+			
+	
+	this.hits = function(plane){
+		//console.log('hhh', plane, self.y+'selfy', self.x+'selfx')
+		//console.log(plane.planeY <= self.y+60 && plane.planeX+'px'==self.x )
+		if(plane.planeY <= self.y+60 && plane.planeX+'px'==self.x   ){
+		 	
+		 	console.log('hello')
+		 	return true;
+		 }
+		 return false;
+
 	}
 
-	console.log('movebullet called', enemies)
+	//console.log('movebullet called', enemies)
 
 	
 
@@ -212,28 +279,75 @@ function Bullet(){
 	    self.$elem.style.backgroundColor = 'yellow';
 	    self.$elem.style.top = self.y + 'px';
 	    self.$elem.style.left = self.x +'px';
-	    console.log(self.$parent);
+	    //console.log(self.$parent);
 	   	self.$parent.appendChild(self.$elem);
 
 	   
 	   }
+	   this.collide = function(enemy){
+
+		//console.log(enemy, self.y +'self.y'+self.height+'self.height',self.x, 'collide func called')
+		console.log(enemy.x=== self.x-50+'px')
+		 if(enemy.y+65 >= self.y && enemy.x==self.x - 50+'px'  ){
+		 	
+		 	console.log('hello')
+		 	return true;
+		 }
+		 return false;
+		
+	}
 
 
 	this.movebullet = function() {
 		setInterval(function(){
+
+			
+
+			
 
 	 //for (var i = 0; i < bullet.length; i++) {
 	 	 //self.x += self.speedX;
 	   self.y -= self.speedY ;
 	   //console.log(self.y, 'hfgkjsdhfkjhdfkjhsrfjk')
 	   self.$elem.style.top = self.y + "px";
+	   
+
+	   for(var i = 0; i<enemies.length; i++){
+	   		for (var j = 0; j < bullets.length; j++) {
+	   			if(bullets[j].collide(enemies[i])){
+	   				//console.log('after', bullets[j], enemies[i])
+
+	   				enemies[i].health-=1
+	   				
+	   				bullets[j].$elem.remove();
+	   				
+	   				bullets.splice(j,1)
+	   				//console.log(bullets, 'bull', enemies[i].health)
+	   			}
+	   			if(enemies[i].health===0){
+	   			enemies[i].$elem.remove();
+	   				enemies.splice(i, 1)
+	   			}
+	   			
+	   		}
+	   	}
+	   		
+	   		// console.log(enemies[i]);
+				    //  	for(var j = 0; j<enemies.length; i++){
+				    //  			console.log(bullets[i], 'before slice', enemies[j])
+				    //  		if(bullets[i].collide(enemies[j])){
+								// // bullets.splice(i,1)
+								// console.log(bullets, "after slice")
+								// }
+				    //  	}
+				     
 	  //if(self.y < 0 || self.y > 600) 
 	   	//bullets.splice(i, 1);
 	   //console.log(self.parent())
 		//self.$parent.removeChild(self.$elem)
 
 	 //}
-	}, 20)
+	}, 1)
 	
 //console.log('movebullet called')
 }
@@ -281,9 +395,12 @@ function keydownEventHandler(e)
 				     bullet.drawbullet()
 				     bullet.movebullet()
 				    // setInterval(bullet.movebullet(), 800)
-				     console.log(bullet.x, bullet.y)
+				     
 				     bullets.push(bullet)
-				     console.log(bullets)
+				     
+				     
+
+				     //console.log(enemies, 'ufhgkfdhkjdfhgkjfdhg')
 				 }
 			}
 
