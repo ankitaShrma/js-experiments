@@ -1,0 +1,52 @@
+
+.container{
+	height: 500px;
+	width: 352px;
+	background-color: grey;
+	position: relative;
+	overflow: hidden;
+}
+/*.game-wrapper{
+	position: absolute;
+	background-image: url('http://hanslodge.com/images/8cE6oaLxi.jpg');
+	height: 600px;
+	width: 400px;
+	display: block;
+}*/
+/*#play-button{
+	position: absolute;
+	background-image: url("./images/homescreen-start.png");
+	width: 130px;
+	height: 65px;
+	left: 37%;
+	bottom: 90px;
+	z-index: 15;
+}*/
+/*#background{
+	position: absolute;
+	height: 600px;
+	width: 400px;
+	background-repeat: repeat-y;
+	overflow: hidden;
+}*/
+.snake{
+	position:absolute;
+	width:15px;
+	height:15px;
+	background: black;
+	border-radius: 50%;
+	top: 300px;
+	overflow: hidden;
+}
+/**/
+.enemy{
+	position: absolute;
+	border-radius: 10px;
+	border:1px solid black;
+	overflow: hidden;
+}
+.point{
+	position: absolute;
+	border-radius: 50%;
+	overflow: hidden;
+}
