@@ -1,0 +1,217 @@
+CREATE TABLE books(
+	book_id serial PRIMARY KEY,
+	isbn VARCHAR(50) UNIQUE,
+	book_name VARCHAR(255),
+	author_id integer references authors(author_id)
+);
+
+
+
+ALTER TABLE books DROP CONSTRAINT book_categories_book_id_fkey, ADD CONSTRAINT book_categories_book_id_fkey FOREIGN KEY (author_id) REFERENCES authors(author_id) ON DELETE CASCADE;
+	
+	
+CREATE TABLE authors(
+	author_id serial PRIMARY KEY,
+	author_name VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE categories(
+	category_id serial PRIMARY KEY,
+	category_name VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE book_categories(
+	book_cat_id serial PRIMARY KEY,
+	book_id integer references books(book_id),
+	category_id integer references categories(category_id)
+	
+);
+
+CREATE TABLE users(
+	user_id serial PRIMARY KEY,
+	user_name VARCHAR(80) NOT NULL,
+	user_department VARCHAR(80),
+	user_contact VARCHAR(80)
+	
+);
+
+CREATE TABLE loan(
+	loan_id serial PRIMARY KEY,
+	issued_date date NOT NULL,
+	due_date date NOT NULL,
+	returned_date date NOT NULL,
+	user_id integer references users(user_id)
+);
+
+
+ALTER TABLE loan ADD COLUMN book_id integer references books(book_id);
+alter table loan ALTER COLUMN returned_date DROP not null;
+
+Alter table loan RENAME to loans;
+
+
+////////////////////////////////////////////////////////////////////
+
+INSERT INTO authors(author_name) VALUES 
+	('Paulo'),
+	('Lev Grossman');
+
+
+INSERT INTO books (isbn, book_name, author_id) VALUES
+	('11-22', 'ABC', 1),
+	('33-44', 'DEF', 1),
+	('55-66', 'GHI', 1),
+	('77-88', 'JKL', 1),
+	('99-00', 'MNO', 1),
+	('00-11', 'PQR', 2),
+	('44-55', 'STU', 2),
+	('66-77', 'VWX', 2),
+	('88-99', 'YZ', 2);
+	
+	
+INSERT INTO book_categories (book_id, category_id) VALUES
+	(1,1),
+	(2,1),
+	(3,2),
+	(4,2),
+	(5,3),
+	(6,3),
+	(7,4),
+	(8,4),
+	(9,5),
+	(10,5);
+	
+INSERT INTO book_categories (book_id, category_id) VALUES
+	(1,2),
+	(2,3),
+	(2,5),
+	(3,4),
+	(4,4);
+	
+INSERT INTO users (user_name, user_department, user_contact) VALUES
+	('Aayush', 'CE', '1234'),
+	('Manish', 'CS', '5678'),
+	('Shrijan', 'BIT', '9012'),
+	('Shankar', 'CS', '3456'),
+	('Uzal', 'BIT', '7890');
+	
+	
+
+
+
+INSERT INTO categories (category_name) VALUES
+	('scifi'),
+	('thriller'),
+	('mystery');
+	
+
+
+INSERT INTO loans (issued_date, due_date, returned_date, user_id, book_id) VALUES	
+	('1999-1-1', '1999-1-30', null, 1, 1),	
+	('1999-2-18', '1999-3-18', null, 3, 2),
+	('1999-2-2', '1999-2-28', '1999-2-13', 2, 2),
+	('1999-2-20', '1999-3-20', null, 2, 4),
+	('1999-3-12', '1999-4-12', '1999-4-10', 4, 4 ),
+	('1999-5-1', '1999-5-29', '1999-5-10', 5, 5),
+	('1999-5-13', '1999-6-13', '1999-6-10', 2, 5),
+	('1999-6-10', '1999-7-10', null, 5, 7),
+	('1999-7-10', '1999-8-10', '1999-8-7', 4, 8),
+	('1999-8-10', '1999-9-10', null, 2, 9);
+	
+	
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+USE DISTINCT or GROUP BY to get distinct value
+
+Q. no. 6>>
+
+SELECT book_name FROM books NATURAL JOIN loans
+WHERE returned_date <= CURRENT_DATE;
+
+
+Q. no 7>>
+
+SELECT book_name,author_name FROM books natural join authors
+WHERE author_name = 'Paulo'
+ORDER BY book_name;
+	
+Q. no 8>>
+
+SELECT DISTINCT bks.book_name,aut.author_name 
+FROM books bks join authors aut ON (bks.author_id = aut.author_id)
+				join book_categories bkc ON (bks.book_id = bkc.book_id)
+                join categories cat ON (bkc.category_id = cat.category_id)
+WHERE aut.author_name = 'Paulo' AND cat.category_name = 'scifi'
+ORDER BY book_name;
+	
+Q. no. 9>>
+
+SELECT book_name FROM books NATURAL JOIN loans
+WHERE issued_date >='1999-01-30' AND issued_date <= '1999-05-30';
+
+(Can use BETWEEN)
+
+Q. no. 10>>
+
+UPDATE loans SET returned_date = CURRENT_DATE WHERE loans.loan_id = 10;
+
+Q. no. 11>>
+
+Another user wants to return multiple loaned book. Write an update query to make this happen.
+
+UPDATE loans SET returned_date = CURRENT_DATE WHERE loans.user_id = 10 AND loans.book_id IN (1,3);
+
+
+
+Q. no 12>>
+
+Check what happens when you want to delete an author; What needs to be done?
+
+We can't delete a foreign key if it still references another table. 
+(violates foreign key constraint on table books) For this, we need to first delete the reference on books TABLE or use ON CASCADE DELETE constraint. 
+For this, we need to drop the constraints on the key first and then add the foreign key (cant simply add on cascade delete).
+
+ALTER TABLE books DROP CONSTRAINT books_author_id_fkey, ADD CONSTRAINT books_author_id_fkey FOREIGN KEY (author_id) REFERENCES authors(author_id) ON DELETE CASCADE;
+
+(Update on table books violated fkey constraint on table book_categories(book_categories_book_id_fkey))
+
+ALTER TABLE book_categories DROP CONSTRAINT book_categories_book_id_fkey, ADD CONSTRAINT book_categories_book_id_fkey FOREIGN KEY (book_id) references books(book_id) ON DELETE CASCADE;
+
+DELETE FROM authors WHERE author_id = 2
+
+>> DELETE 1
+
+
+
+Q no. 13>>
+
+Here user_id is referenced by loan. 
+
+ALTER TABLE loans DROP CONSTRAINT loan_user_id_fkey, ADD CONSTRAINT loan_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE;
+
+DELETE FROM users 
+WHERE user_id IN (SELECT user_id FROM loans WHERE issued_date < (CURRENT_DATE - INTERVAL '1' MONTH));
+
+
+////// DO SOFT DELETE RATHER THAN HARD DELETE ////////
+
+ALTER TABLE users ADD COLUMN is_active boolean;
+
+
+UPDATE users set is_active = 0 WHERE user_id IN (SELECT user_id FROM loans WHERE issued_date < (CURRENT_DATE - INTERVAL '1' MONTH));
+
+>>DELETE 5
+
+Q. no 14>>
+
+SELECT user_name from users
+WHERE user_id IN (SELECT user_id FROM loans WHERE returned_date > (CURRENT_DATE - INTERVAL '1' MONTH));
+
+
+//////// serial datatype auto increases even after the row is deleted. So, we need to reset.
+
+SELECT MAX('column_name') FROM 'table_name'
+ALTER TABLE 'table_name' AUTO_INCREMENT = number
+
+
