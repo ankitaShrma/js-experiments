@@ -58,7 +58,7 @@ function verifyToken(req, res, next){
 
   }
   else{
-    res.json('403 lol frobiden')
+    res.json('403 forbidden')
   }
 }
 
@@ -89,7 +89,7 @@ router.get('/', verifyToken, (req, res, next) => {
           else{
             //console.log(ref.id, 'ppppp')
             userService
-            .getUser(ref.id)
+            .getUser(14)
             .then(user => {
             jwt.sign({user:user}, 'secretkey', {expiresIn: '20s'}, (err, token) =>{ //{expiresIn: '50s' },
             res.json({
