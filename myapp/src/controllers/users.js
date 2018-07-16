@@ -46,44 +46,66 @@ router.post('/login', (req, res, next) => {
   userService
     .loginUser(req.body)
     .then(todo => {
-      if(todo.length<1){
+      console.log(todo)
+      if(todo === null){
         res.json('User not found')
       }
       // else{
       //   console.log(req.body.password, todo.username)
       //   res.json(todo.username)
-      //   bcrypt.compare(req.body.password, todo.password, (err, result) => {
+        
       //     if (err){
       //       res.json('incorrect password');
       //     }
           else{
-          const user = req.body;
-          userService
-          .getUserName(user.username)
-          .then(data => {
-            uidgen.generate((err, uid) => {
-              if (err) throw err;
-              //console.log(uid, data.id, 'ppppppppppppp'); 
-              userService.postRefreshToken(data.id, uid).then()
-              .catch(err => console.log(err));
-              
-            });
-          
-            jwt.sign({user:user}, 'secretkey', {expiresIn: '20s'},  (err, token) =>{ //{expiresIn: '50s' },
-                res.json({
-                  token
+            
+            bcrypt.compare(req.body.password, todo.attributes.password, (err, result) => {
+              if(result){
+
+                const user = req.body;
+                userService
+                .getUserName(user.username)
+                .then(data => {
+                  console.log(data.attributes.id)
+                  userService.userAlreadyHasToken(data.attributes.id).then(name => {
+                    //res.json(data)
+                    if(name.length < 1){
+                    uidgen.generate((err, uid) => {
+                      if (err) throw err;
+                      console.log(uid, data.attributes.id, 'ppppppppppppp'); 
+                      userService.postRefreshToken(data.attributes.id, uid).then()
+                      .catch(err => console.log(err));
+                      
+                    });
+                  }
+
+                  else{
+                    console.log("user already logged in")
+                }
+
+                  })
+                  
+                
+                  jwt.sign({user:user}, 'secretkey',  (err, token) =>{ //{expiresIn: '50s' },
+                      res.json({
+                        token
+                      })
+                     // console.log(token)
+                  });       
+                
                 })
-            });       
-          // res.json(data)
-          })
-          .catch(err => next(err));           
-        //   }
-        // })
+                .catch(err => next(err)); 
+
+              }
+
+              else{
+                res.json("Password incorrect")
+              }               
+            })       
       }
+     
     })
     
-
-
   });
     // .then(data => {
     //   console.log(data);

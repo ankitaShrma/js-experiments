@@ -111,8 +111,12 @@ router.get('/', verifyToken, (req, res, next) => {
       userService
       .getUserName(username)
       .then(data => {
-       // console.log(data);
-        res.json({ authData });
+        console.log(data.attributes.id);
+        todoService
+        .getTodofromUser(data.attributes.id, 'controller')
+        .then(data => res.json({ data: data}))
+       .catch(err => next(err));
+       // res.json({ data });
       })
       .catch(err => next(err));
       //res.json(username)
