@@ -124,6 +124,30 @@ export function getTodoTitle(query){
   // })
 }
 
+export function getTodofromUser(id){
+  console.log(id )
+  //const {title, details } = query;
+  //console.log(title, 'here is get from query');
+  //return new Todo({title:title}).fetch().then(todo => {
+    // return Todo.query(function(qb) {
+    //     qb.where('user_id', '=', '6');
+    //   }).fetchAll()
+
+    // return new Todo({
+    //   user_id: id
+    // }).fetch()
+    return Todo.query(function(qb) {
+          qb.where('user_id', '=', id);
+        }).fetchAll()
+
+  //       .then(function(model) {
+  //   if(!todo){
+  //     res.json('todo not found');
+  //   }
+  //   return todo
+  // })
+}
+
 /**
  * Get a todo.
  *

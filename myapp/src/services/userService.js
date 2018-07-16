@@ -77,7 +77,11 @@ export function checkRefresh(token){
     return refresh;
   });
 }
-
+export function userAlreadyHasToken(id){
+  return UserToken.query(function(qb) {
+    qb.where('user_id', '=', id);
+  }).fetchAll()
+}
 /**
  * Create new user.
  *
@@ -153,3 +157,13 @@ export function logoutUser(userid) {
   return UserToken
   .where( 'user_id', '=', userid ).destroy();
 }
+
+/**** 
+ * export function logoutUser() {
+ * const refToken = req.headers['refresh'];
+  console.log(refToken)
+  return UserToken
+  .where( 'refresh_token', '=', refToken ).destroy();
+}
+ * 
+ * ****/
