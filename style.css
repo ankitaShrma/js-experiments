@@ -1,0 +1,45 @@
+*{
+	margin-top: 0px;
+}
+.container{
+	height: 600px;
+	width: 400px;
+	position: relative;
+	margin: 0 auto;
+}
+.game-wrapper{
+	position: absolute;
+	background-image: url('http://hanslodge.com/images/8cE6oaLxi.jpg');
+	height: 600px;
+	width: 400px;
+	display: block;
+}
+#play-button{
+	position: absolute;
+	/*background-image: url("./images/homescreen-start.png");*/
+	width: 130px;
+	height: 65px;
+	left: 37%;
+	bottom: 90px;
+	z-index: 15;
+}
+#background{
+	position: absolute;
+	height: 600px;
+	width: 400px;
+	background-repeat: repeat-y;
+	overflow: hidden;
+}
+.plane{
+	position:absolute;
+	width:100px;
+	height:100px;
+	background:url('./images/plane.png') no-repeat;
+	top: 500px;
+}
+.bullet {
+	position: absolute;
+}
+.enemy{
+	position: absolute;
+}
